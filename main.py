@@ -77,10 +77,11 @@ class ParkunDeploy:
                               pip install --upgrade pip && \
                               pip install -r requirements.txt')
 
-        self.connection.run(f'cd {config.APPEAL_PREPARER} && \
-                              source .venv/bin/activate && \
-                              nohup python main.py > \
-                              my.log 2>log.log &')
+        self.connection.run(
+            f'cd {config.APPEAL_PREPARER} && \
+            source .venv/bin/activate && \
+            (nohup python main.py &> log.txt < /dev/null &) && /bin/true')
+
         print('stop')
 
     def start(self) -> None:
