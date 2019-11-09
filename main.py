@@ -50,12 +50,16 @@ class ParkunDeploy:
         self.connection.run(f'tar xvzf {filename}')
 
     def stop_previous_bot(self):
-        self.connection.run(f'cd {config.PARKUN_BOT} && make stop_extra_env')
+        self.connection.run(
+            f'cd {config.PARKUN_BOT} && make stop_extra_services')
+
         self.connection.run(f'rm -rf {config.PARKUN_BOT}_old')
         self.rename_previous_version(config.PARKUN_BOT)
 
     def run_bot(self):
-        self.connection.run(f'cd {config.PARKUN_BOT} && make extra_env')
+        self.connection.run(
+            f'cd {config.PARKUN_BOT} && make start_extra_services')
+
         time.sleep(5)
         self.connection.run(f'cd {config.PARKUN_BOT} && \
                               docker restart parkun_bot')
