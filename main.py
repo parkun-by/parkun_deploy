@@ -1,4 +1,3 @@
-import fabric
 import tarfile
 import config
 import os
@@ -88,6 +87,12 @@ class ParkunDeploy:
 
         print('stop')
 
+    def upload_makefile(self):
+        filename = 'Makefile'
+        file = path.join(os.getcwd(), filename)
+        result = self.connection.put(file, remote='')
+        print(f'Uploaded {result.local} to {result.remote}')
+
     def start(self) -> None:
         self.stop_previous_bot()
         self.deploy(config.BOT_FOLDER)
@@ -96,6 +101,8 @@ class ParkunDeploy:
         self.stop_previous_preparer()
         self.deploy(config.PREPARER_FOLDER)
         self.run_preparer()
+
+        self.upload_makefile()
 
 
 if __name__ == "__main__":
