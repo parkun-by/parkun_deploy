@@ -59,10 +59,6 @@ class ParkunDeploy:
         self.connection.run(
             f'cd {config.PARKUN_BOT} && make start_extra_services')
 
-        time.sleep(5)
-        self.connection.run(f'cd {config.PARKUN_BOT} && \
-                              docker restart parkun_bot')
-
     def stop_previous_preparer(self):
         try:
             self.connection.run(f'cd {config.APPEAL_PREPARER} && \
