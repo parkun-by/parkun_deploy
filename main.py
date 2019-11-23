@@ -1,7 +1,6 @@
 import tarfile
 import config
 import os
-import time
 
 from os import path
 from tarfile import TarInfo
@@ -49,15 +48,15 @@ class ParkunDeploy:
         self.connection.run(f'tar xvzf {filename}')
 
     def stop_previous_bot(self):
-        self.connection.run(
-            f'cd {config.PARKUN_BOT} && make stop_extra_services')
+        self.safe_run_command(f'cd {config.PARKUN_BOT} && make stop_bot')
+        self.safe_run_command(f'cd {config.PARKUN_BOT} && make stop_prod_env')
 
         self.connection.run(f'rm -rf {config.PARKUN_BOT}_old')
         self.rename_previous_version(config.PARKUN_BOT)
 
     def run_bot(self):
-        self.connection.run(
-            f'cd {config.PARKUN_BOT} && make start_extra_services')
+        self.connection.run(f'cd {config.PARKUN_BOT} && make start_prod_env')
+        self.connection.run(f'cd {config.PARKUN_BOT} && make start_bot')
 
     def stop_previous_preparer(self):
         try:
@@ -88,6 +87,12 @@ class ParkunDeploy:
         file = path.join(os.getcwd(), filename)
         result = self.connection.put(file, remote='')
         print(f'Uploaded {result.local} to {result.remote}')
+
+    def safe_run_command(self, command: str) -> None:
+        try:
+            self.connection.run(command)
+        except UnexpectedExit as e:
+            print(e.result)
 
     def start(self) -> None:
         self.stop_previous_bot()
