@@ -1,4 +1,5 @@
 import tarfile
+from typing import Optional
 import config
 import os
 
@@ -16,7 +17,7 @@ class ParkunDeploy:
             port=22,
             connect_kwargs={"password": config.PASSWORD})
 
-    def no_hidden(self, item: TarInfo) -> TarInfo or None:
+    def no_hidden(self, item: TarInfo) -> Optional[TarInfo]:
         relative_path = path.split(item.name)[1]
 
         for pattern in config.IGNORED:
@@ -58,25 +59,25 @@ class ParkunDeploy:
         self.connection.run(f'cd {config.PARKUN_BOT} && make start_prod_env')
         self.connection.run(f'cd {config.PARKUN_BOT} && make start_bot')
 
-    def stop_previous_preparer(self):
+    def stop_previous_sender(self):
         try:
-            self.connection.run(f'cd {config.APPEAL_PREPARER} && \
+            self.connection.run(f'cd {config.APPEAL_SENDER} && \
                                   kill -9 `cat save_pid.txt`')
         except UnexpectedExit as e:
             print(e.result)
 
-        self.connection.run(f'rm -rf {config.APPEAL_PREPARER}_old')
-        self.rename_previous_version(config.APPEAL_PREPARER)
+        self.connection.run(f'rm -rf {config.APPEAL_SENDER}_old')
+        self.rename_previous_version(config.APPEAL_SENDER)
 
-    def run_preparer(self):
-        self.connection.run(f'cd {config.APPEAL_PREPARER} && \
+    def run_sender(self):
+        self.connection.run(f'cd {config.APPEAL_SENDER} && \
                               python3 -m venv .venv && \
                               source .venv/bin/activate && \
                               pip install --upgrade pip && \
                               pip install -r requirements.txt')
 
         self.connection.run(
-            f'cd {config.APPEAL_PREPARER} && \
+            f'cd {config.APPEAL_SENDER} && \
             source .venv/bin/activate && \
             (nohup python main.py &> log.txt < /dev/null &) && /bin/true')
 
@@ -99,9 +100,9 @@ class ParkunDeploy:
         self.deploy(config.BOT_FOLDER)
         self.run_bot()
 
-        self.stop_previous_preparer()
-        self.deploy(config.PREPARER_FOLDER)
-        self.run_preparer()
+        self.stop_previous_sender()
+        self.deploy(config.SENDER_FOLDER)
+        self.run_sender()
 
         self.upload_makefile()
 

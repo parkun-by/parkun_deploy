@@ -6,12 +6,12 @@ USERNAME = 'username'
 PASSWORD = 'password'
 
 PARKUN_BOT = 'parkun-bot'
-APPEAL_PREPARER = 'appeal_preparer'
+APPEAL_SENDER = 'appeal_sender'
 
 BOT_FOLDER = path.join(os.sep, 'home', 'skaborik', 'Repos', PARKUN_BOT)
 
-PREPARER_FOLDER = path.join(
-    os.sep, 'home', 'skaborik', 'Repos', APPEAL_PREPARER)
+SENDER_FOLDER = path.join(
+    os.sep, 'home', 'skaborik', 'Repos', APPEAL_SENDER)
 
 IGNORED = [
     f'.',
