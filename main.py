@@ -49,39 +49,22 @@ class ParkunDeploy:
         self.connection.run(f'tar xvzf {filename}')
 
     def stop_previous_bot(self):
-        self.safe_run_command(f'cd {config.PARKUN_BOT} && make stop_bot')
-        self.safe_run_command(f'cd {config.PARKUN_BOT} && make stop_prod_env')
+        self.safe_run_command(f'cd {config.PARKUN_BOT} && make stop_prod')
 
         self.connection.run(f'rm -rf {config.PARKUN_BOT}_old')
         self.rename_previous_version(config.PARKUN_BOT)
 
     def run_bot(self):
-        self.connection.run(f'cd {config.PARKUN_BOT} && make start_prod_env')
-        self.connection.run(f'cd {config.PARKUN_BOT} && make start_bot')
+        self.connection.run(f'cd {config.PARKUN_BOT} && make start_prod')
 
     def stop_previous_sender(self):
-        try:
-            self.connection.run(f'cd {config.APPEAL_SENDER} && \
-                                  kill -9 `cat save_pid.txt`')
-        except UnexpectedExit as e:
-            print(e.result)
+        self.safe_run_command(f'cd {config.PARKUN_BOT} && make stop')
 
         self.connection.run(f'rm -rf {config.APPEAL_SENDER}_old')
         self.rename_previous_version(config.APPEAL_SENDER)
 
     def run_sender(self):
-        self.connection.run(f'cd {config.APPEAL_SENDER} && \
-                              python3 -m venv .venv && \
-                              source .venv/bin/activate && \
-                              pip install --upgrade pip && \
-                              pip install -r requirements.txt')
-
-        self.connection.run(
-            f'cd {config.APPEAL_SENDER} && \
-            source .venv/bin/activate && \
-            (nohup python main.py &> log.txt < /dev/null &) && /bin/true')
-
-        print('stop')
+        self.connection.run(f'cd {config.APPEAL_SENDER} && make start')
 
     def upload_makefile(self):
         filename = 'Makefile'
