@@ -58,13 +58,13 @@ class ParkunDeploy:
         self.connection.run(f'cd {config.PARKUN_BOT} && make start_prod')
 
     def stop_previous_sender(self):
-        self.safe_run_command(f'cd {config.PARKUN_BOT} && make stop')
+        self.safe_run_command(f'cd {config.APPEAL_SENDER} && make stop_prod')
 
         self.connection.run(f'rm -rf {config.APPEAL_SENDER}_old')
         self.rename_previous_version(config.APPEAL_SENDER)
 
     def run_sender(self):
-        self.connection.run(f'cd {config.APPEAL_SENDER} && make start')
+        self.connection.run(f'cd {config.APPEAL_SENDER} && make start_prod')
 
     def upload_makefile(self):
         filename = 'Makefile'
