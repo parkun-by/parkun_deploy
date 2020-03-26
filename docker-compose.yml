@@ -1,0 +1,80 @@
+version: '3.5'
+
+volumes:
+  wiremock-data:
+  rabbit-data:
+
+networks:
+  parkun:
+
+services:
+  bot:
+    container_name: parkun_bot
+    networks:
+      - parkun
+    image: skaborik/parkun_bot
+    restart: always
+    volumes:
+      - /tmp/temp_files_parkun:/tmp/temp_files_parkun
+      - ${HOME_FOLDER}/deploy/parkun_bot:/tmp/parkun_config
+    depends_on:
+      - redis
+      - rabbit
+
+  redis:
+    container_name: parkun_redis
+    image: redis:5.0.7-alpine
+    command: redis-server --requirepass '${REDIS_PASSWORD}' --appendonly yes
+    volumes:
+      - ${HOME_FOLDER}/redis_data:/data
+    restart: always
+    networks:
+      - parkun
+
+  rabbit:
+    container_name: parkun_rabbit
+    networks:
+      - parkun
+    ports:
+      - 5672:5672
+      - 15672:15672
+    build:
+      context: ${HOME_FOLDER}/deploy/rabbit
+      dockerfile: Dockerfile
+    volumes:
+      - ${HOME_FOLDER}/rabbit_data:/var/lib/rabbitmq
+    restart: always
+
+  browser:
+    container_name: parkun_browser
+    image: selenium/standalone-firefox:3.141.59
+    networks:
+      - parkun
+    restart: always
+    volumes:
+      - /dev/shm:/dev/shm
+
+  captcha_solver:
+    container_name: parkun_captcha_solver
+    image: andreidrang/mvd.gov.by-captcha-back
+    command: bash -c "cd src/ && gunicorn --bind 0.0.0.0:5000 --workers=1 wsgi:app --reload"
+    restart: always
+    networks:
+      - parkun
+    environment:
+      - SENTRY_ENVIRONMENT=prod
+      - SENTRY_NAME=prod
+
+  sender:
+    container_name: parkun_sender
+    networks:
+      - parkun
+    image: skaborik/appeal_sender
+    restart: always
+    volumes:
+      - /tmp/temp_files_parkun:/tmp/temp_files_parkun
+      - ${HOME_FOLDER}/deploy/appeal_sender:/tmp/sender_config
+    depends_on:
+      - browser
+      - rabbit
+      - captcha_solver

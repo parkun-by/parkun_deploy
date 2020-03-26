@@ -1,12 +1,15 @@
-import tarfile
-from typing import Optional
 import config
 import os
 
 from os import path
-from tarfile import TarInfo
 from fabric import Connection
 from invoke import UnexpectedExit
+from dotenv import load_dotenv
+
+load_dotenv()
+
+HOME_FOLDER = os.getenv('HOME_FOLDER')
+REDIS_PASSWORD = os.getenv('REDIS_PASSWORD')
 
 
 class ParkunDeploy:
@@ -17,59 +20,29 @@ class ParkunDeploy:
             port=22,
             connect_kwargs={"password": config.PASSWORD})
 
-    def no_hidden(self, item: TarInfo) -> Optional[TarInfo]:
-        relative_path = path.split(item.name)[1]
+    def run_parkun(self):
+        self.safe_run_command(
+            f'export HOME_FOLDER={HOME_FOLDER} && export REDIS_PASSWORD=\'{REDIS_PASSWORD}\' && make start')
 
-        for pattern in config.IGNORED:
-            if relative_path.startswith(pattern):
-                return None
-
-        return item
-
-    def tar(self, folder: str) -> str:
-        name = path.basename(folder)
-
-        with tarfile.open(f'{name}.tar.gz', "w:gz") as tar:
-            tar.add(folder, arcname=name, filter=self.no_hidden)
-
-        return name
-
-    def rename_previous_version(self, folder_name):
-        try:
-            self.connection.run(f'mv {folder_name} {folder_name}_old')
-        except UnexpectedExit as e:
-            print(e.result)
-
-    def deploy(self, folder: str) -> None:
-        name = self.tar(folder)
-        filename = f'{name}.tar.gz'
-        file = path.join(os.getcwd(), filename)
-        result = self.connection.put(file, remote='')
-        print(f'Uploaded {result.local} to {result.remote}')
-        self.connection.run(f'tar xvzf {filename}')
-
-    def stop_previous_bot(self):
-        self.safe_run_command(f'cd {config.PARKUN_BOT} && make stop_prod')
-
-        self.connection.run(f'rm -rf {config.PARKUN_BOT}_old')
-        self.rename_previous_version(config.PARKUN_BOT)
-
-    def run_bot(self):
-        self.connection.run(f'cd {config.PARKUN_BOT} && make start_prod')
-
-    def stop_previous_sender(self):
-        self.safe_run_command(f'cd {config.APPEAL_SENDER} && make stop_prod')
-
-        self.connection.run(f'rm -rf {config.APPEAL_SENDER}_old')
-        self.rename_previous_version(config.APPEAL_SENDER)
-
-    def run_sender(self):
-        self.connection.run(f'cd {config.APPEAL_SENDER} && make start_prod')
+    def stop_current(self):
+        self.safe_run_command(
+            f'export HOME_FOLDER={HOME_FOLDER} && export REDIS_PASSWORD=\'{REDIS_PASSWORD}\' && make stop')
 
     def upload_makefile(self):
         filename = 'Makefile'
         file = path.join(os.getcwd(), filename)
-        result = self.connection.put(file, remote='')
+        result = self.connection.put(file, remote=f'{HOME_FOLDER}')
+        print(f'Uploaded {result.local} to {result.remote}')
+
+    def upload_docker_compose(self):
+        filename = 'docker-compose.yml'
+        file = path.join(os.getcwd(), filename)
+        result = self.connection.put(file, remote=f'{HOME_FOLDER}/deploy')
+        print(f'Uploaded {result.local} to {result.remote}')
+
+        filename = '.env'
+        file = path.join(os.getcwd(), filename)
+        result = self.connection.put(file, remote=f'{HOME_FOLDER}/deploy')
         print(f'Uploaded {result.local} to {result.remote}')
 
     def safe_run_command(self, command: str) -> None:
@@ -78,16 +51,59 @@ class ParkunDeploy:
         except UnexpectedExit as e:
             print(e.result)
 
-    def start(self) -> None:
-        self.stop_previous_bot()
-        self.deploy(config.BOT_FOLDER)
-        self.run_bot()
-
-        self.stop_previous_sender()
-        self.deploy(config.SENDER_FOLDER)
-        self.run_sender()
-
+    def deploy(self):
+        self.create_deploy_folder()
+        self.upload_configs()
         self.upload_makefile()
+        self.upload_docker_compose()
+
+    def upload_configs(self):
+        self.upload_parkun_bot_config()
+        self.upload_appeal_sender_config()
+        self.upload_rabbit_config()
+
+    def upload_rabbit_config(self):
+        self.safe_run_command('mkdir -p deploy/rabbit')
+        directory = os.path.join(config.PARKUN_BOT_FOLDER,
+                                 'env_docker/rabbitmq')
+
+        for filename in os.listdir(directory):
+            file = os.path.join(directory, filename)
+
+            result = self.connection.put(
+                file,
+                remote=f'{HOME_FOLDER}/deploy/rabbit')
+
+            print(f'Uploaded {result.local} to {result.remote}')
+
+    def upload_parkun_bot_config(self):
+        self.safe_run_command('mkdir -p deploy/parkun_bot')
+        filename = 'config.py'
+        file = path.join(os.getcwd(), 'parkun_bot', filename)
+
+        result = self.connection.put(file,
+                                     remote=f'{HOME_FOLDER}/deploy/parkun_bot')
+
+        print(f'Uploaded {result.local} to {result.remote}')
+
+    def upload_appeal_sender_config(self):
+        self.safe_run_command('mkdir -p deploy/appeal_sender')
+        filename = 'config.py'
+        file = path.join(os.getcwd(), 'appeal_sender', filename)
+
+        result = self.connection.put(
+            file,
+            remote=f'{HOME_FOLDER}/deploy/appeal_sender')
+
+        print(f'Uploaded {result.local} to {result.remote}')
+
+    def create_deploy_folder(self):
+        self.safe_run_command('mkdir -p deploy')
+
+    def start(self) -> None:
+        self.stop_current()
+        self.deploy()
+        self.run_parkun()
 
 
 if __name__ == "__main__":
