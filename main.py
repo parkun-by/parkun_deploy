@@ -22,11 +22,15 @@ class ParkunDeploy:
 
     def run_parkun(self):
         self.safe_run_command(
-            f'export HOME_FOLDER={HOME_FOLDER} && export REDIS_PASSWORD=\'{REDIS_PASSWORD}\' && make start')
+            f'export HOME_FOLDER={HOME_FOLDER} &&' +
+            f'export REDIS_PASSWORD=\'{REDIS_PASSWORD}\' && ' +
+            'make start')
 
     def stop_current(self):
         self.safe_run_command(
-            f'export HOME_FOLDER={HOME_FOLDER} && export REDIS_PASSWORD=\'{REDIS_PASSWORD}\' && make stop')
+            f'export HOME_FOLDER={HOME_FOLDER} && ' +
+            f'export REDIS_PASSWORD=\'{REDIS_PASSWORD}\' && ' +
+            'make stop')
 
     def upload_makefile(self):
         filename = 'Makefile'
@@ -61,11 +65,24 @@ class ParkunDeploy:
         self.upload_parkun_bot_config()
         self.upload_appeal_sender_config()
         self.upload_rabbit_config()
+        self.upload_redis_config()
+
+    def upload_redis_config(self):
+        self.safe_run_command('mkdir -p deploy/redis')
+        directory = path.join(os.getcwd(), 'redis')
+
+        for filename in os.listdir(directory):
+            file = os.path.join(directory, filename)
+
+            result = self.connection.put(
+                file,
+                remote=f'{HOME_FOLDER}/deploy/redis')
+
+            print(f'Uploaded {result.local} to {result.remote}')
 
     def upload_rabbit_config(self):
         self.safe_run_command('mkdir -p deploy/rabbit')
-        directory = os.path.join(config.PARKUN_BOT_FOLDER,
-                                 'env_docker/rabbitmq')
+        directory = path.join(os.getcwd(), 'rabbitmq')
 
         for filename in os.listdir(directory):
             file = os.path.join(directory, filename)

@@ -1,0 +1,134 @@
+# telegram bot token. Get it here https://t.me/BotFather
+API_TOKEN = 'PUT_TOKEN_HERE'
+URL_BASE = 'https://api.telegram.org/file/bot' + API_TOKEN + '/'
+
+# violation photos count upper bound in single appeal
+MAX_VIOLATION_PHOTOS = 10
+
+# appeal language
+BY = '_by'
+RU = '_ru'
+
+# bot config
+PREVIOUS_ADDRESS_PREFIX = '/saved_'
+PREVIOUS_ADDRESS_REGEX = r'\/saved_\d+'
+APPEAL_STORAGE_LIMIT = 3
+
+# regionalization
+MINSK = 'minsk'
+
+CENTRALNY = 'centralny'
+SAVIECKI = 'saviecki'
+PIERSAMAJSKI = 'piersamajski'
+PARTYZANSKI = 'partyzanski'
+ZAVODSKI = 'zavodski'
+LENINSKI = 'leninski'
+KASTRYCNICKI = 'kastrycnicki'
+MASKOUSKI = 'maskouski'
+FRUNZIENSKI = 'frunzienski'
+
+BREST_REGION = 'brest_region'
+VITSEBSK_REGION = 'vitsebsk_region'
+HOMEL_REGION = 'homel_region'
+HRODNA_REGION = 'hrodna_region'
+MINSK_REGION = 'minsk_region'
+MAHILEU_REGION = 'mahileu_region'
+
+REGIONS = {
+    MINSK: {CENTRALNY: {},
+            FRUNZIENSKI: {},
+            KASTRYCNICKI: {},
+            LENINSKI: {},
+            MASKOUSKI: {},
+            PARTYZANSKI: {},
+            PIERSAMAJSKI: {},
+            SAVIECKI: {},
+            ZAVODSKI: {}, },
+    BREST_REGION: {},
+    VITSEBSK_REGION: {},
+    HOMEL_REGION: {},
+    HRODNA_REGION: {},
+    MINSK_REGION: {},
+    MAHILEU_REGION: {},
+}
+
+OSM_REGIONS = {
+    CENTRALNY: 'Centralny raion, Minsk',
+    FRUNZIENSKI: 'Frunzienski paion, Minsk',
+    KASTRYCNICKI: 'Kastryčnicki raion, Minsk',
+    LENINSKI: 'Leninski raion, Minsk',
+    MASKOUSKI: 'Maskoŭski raion, Minsk',
+    PARTYZANSKI: 'Partyzanski raion, Minsk',
+    PIERSAMAJSKI: 'Pieršamajski Rajon, Minsk',
+    SAVIECKI: 'Saviecki raion, Minsk',
+    ZAVODSKI: 'Zavodski raion, Minsk',
+    MINSK: 'Minsk, Belarus',
+    BREST_REGION: 'Brest Region, Belarus',
+    VITSEBSK_REGION: 'Vitsebsk Region, Belarus',
+    HOMEL_REGION: 'Homel Region, Belarus',
+    HRODNA_REGION: 'Hrodna Region, Belarus',
+    MINSK_REGION: 'Minsk Region, Belarus',
+    MAHILEU_REGION: 'Mahilyow Region, Belarus',
+}
+
+# redis
+REDIS_HOST = 'localhost'
+REDIS_PORT = '16379'
+REDIS_PASSWORD = 'redis'
+
+# bot owner's telegram id to receive feedback
+ADMIN_ID = 00000000
+
+# yandex maps
+YANDEX_MAPS_API_KEY = 'UNNECESSARY_FOR_DEV'
+BASE_YANDEX_MAPS_URL = 'http://localhost:18080/yandex_maps/?'
+ADDRESS_FAIL = 'no_address'
+
+# to post into channel bot needs to be admin there
+CHANNEL = '@channel_name'
+TRASH_CHANNEL = '@channel_name'
+
+# email verifier url
+MAIL_VERIFIER_URL = 'http://localhost:18080/validate'  # response 111
+VERIFYING_FAIL = '42'
+
+# Twitter twitter unnecessary for general development
+CONSUMER_KEY = 'consumer_key'
+CONSUMER_SECRET = 'consumer_secret'
+ACCESS_TOKEN = 'access_token'
+ACCESS_TOKEN_SECRET = 'access_token_secret'
+MAX_TWI_CHARACTERS = 280
+MAX_TWI_PHOTOS = 4
+TWI_URL = 'twitter.com/SOME_TWITTER_ACCOUNT'
+
+# RabbitMQ
+RABBIT_LOGIN = 'parkun_bot'
+RABBIT_PASSWORD = 'parkun_bot'
+
+RABBIT_HTTP_ADDRESS = \
+    f'http://{RABBIT_LOGIN}:{RABBIT_PASSWORD}@localhost:15672'
+
+RABBIT_AMQP_ADDRESS = f'amqp://{RABBIT_LOGIN}:{RABBIT_PASSWORD}@localhost:5672'
+RABBIT_EXCHANGE_MANAGING = 'managing'
+RABBIT_EXCHANGE_SENDING = 'sending'
+RABBIT_EXCHANGE_SHARING = 'sharing'
+RABBIT_ROUTING_VIOLATION = 'violation'
+RABBIT_ROUTING_APPEAL_TO_QUEUE = 'appeal_to_queue'
+RABBIT_QUEUE_STATUS = 'sending_status'
+
+# sender messages types
+CAPTCHA_TEXT = 'captcha_text'
+CAPTCHA_URL = 'captcha_url'
+CAPTCHA_FAIL = 'captcha_fail'
+GET_CAPTCHA = 'get_captcha'
+APPEAL = 'appeal'
+CANCEL = 'cancel'
+CAPTCHA_OK = 'captcha_ok'
+SENDING_CANCELLED = 'sending_cancelled'
+FREE_WORKER = 'free_worker'
+BUSY_WORKER = 'busy_worker'
+
+# status codes
+OK = 'ok'
+FAIL = 'fail'
+WRONG_INPUT = 'wrong_input'

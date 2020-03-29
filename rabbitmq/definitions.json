@@ -1,0 +1,162 @@
+{
+    "vhosts": [
+        {
+            "name": "/"
+        }
+    ],
+    "users": [
+        {
+            "name": "admin",
+            "password": "admin",
+            "tags": "administrator"
+        },
+        {
+            "name": "parkun_bot",
+            "password": "parkun_bot",
+            "tags": "administrator"
+        },
+        {
+            "name": "appeal_sender",
+            "password": "appeal_sender",
+            "tags": "administrator"
+        },
+        {
+            "name": "appeal_manager",
+            "password": "appeal_manager",
+            "tags": "administrator"
+        }
+    ],
+    "permissions": [
+        {
+            "user": "admin",
+            "vhost": "/",
+            "configure": ".*",
+            "write": ".*",
+            "read": ".*"
+        },
+        {
+            "user": "parkun_bot",
+            "vhost": "/",
+            "configure": ".*",
+            "write": ".*",
+            "read": ".*"
+        },
+        {
+            "user": "appeal_sender",
+            "vhost": "/",
+            "configure": ".*",
+            "write": ".*",
+            "read": ".*"
+        },
+        {
+            "user": "appeal_manager",
+            "vhost": "/",
+            "configure": ".*",
+            "write": ".*",
+            "read": ".*"
+        }
+    ],
+    "exchanges": [
+        {
+            "name": "managing",
+            "vhost": "/",
+            "type": "direct",
+            "durable": true,
+            "auto_delete": false,
+            "internal": false,
+            "arguments": {}
+        },
+        {
+            "name": "sending",
+            "vhost": "/",
+            "type": "direct",
+            "durable": true,
+            "auto_delete": false,
+            "internal": false,
+            "arguments": {}
+        },
+        {
+            "name": "sharing",
+            "vhost": "/",
+            "type": "fanout",
+            "durable": true,
+            "auto_delete": false,
+            "internal": false,
+            "arguments": {}
+        }
+    ],
+    "queues": [
+        {
+            "name": "sending_status",
+            "vhost": "/",
+            "durable": true,
+            "auto_delete": false,
+            "arguments": {
+                "x-queue-mode": "lazy"
+            }
+        },
+        {
+            "name": "sender_available",
+            "vhost": "/",
+            "durable": true,
+            "auto_delete": false,
+            "arguments": {
+                "x-queue-mode": "lazy"
+            }
+        },
+        {
+            "name": "appeal",
+            "vhost": "/",
+            "durable": true,
+            "auto_delete": false,
+            "arguments": {
+                "x-queue-mode": "lazy"
+            }
+        },
+        {
+            "name": "twitter",
+            "vhost": "/",
+            "durable": true,
+            "auto_delete": false,
+            "arguments": {
+                "x-queue-mode": "lazy"
+            }
+        }
+    ],
+    "bindings": [
+        {
+            "source": "sending",
+            "vhost": "/",
+            "destination": "sending_status",
+            "destination_type": "queue",
+            "routing_key": "appeal_sending_status",
+            "arguments": {}
+        },
+        {
+            "source": "managing",
+            "vhost": "/",
+            "destination": "appeal",
+            "destination_type": "queue",
+            "routing_key": "appeal_to_queue",
+            "arguments": {}
+        },
+        {
+            "source": "managing",
+            "vhost": "/",
+            "destination": "sender_available",
+            "destination_type": "queue",
+            "routing_key": "sender_availability",
+            "arguments": {}
+        },
+        {
+            "source": "sharing",
+            "vhost": "/",
+            "destination": "twitter",
+            "destination_type": "queue",
+            "routing_key": "*",
+            "arguments": {}
+        }
+    ],
+    "parameters": [],
+    "policies": []
+}
