@@ -21,6 +21,20 @@ services:
       - redis
       - rabbit
 
+  sender:
+    container_name: parkun_sender
+    networks:
+      - parkun
+    image: skaborik/appeal_sender
+    restart: always
+    volumes:
+      - /tmp/temp_files_parkun:/tmp/temp_files_parkun
+      - ${HOME_FOLDER}/deploy/appeal_sender:/tmp/sender_config
+    depends_on:
+      - browser
+      - rabbit
+      - captcha_solver
+
   redis:
     container_name: parkun_redis
     image: redis:5.0.7-alpine
@@ -67,17 +81,3 @@ services:
     environment:
       - SENTRY_ENVIRONMENT=prod
       - SENTRY_NAME=prod
-
-  sender:
-    container_name: parkun_sender
-    networks:
-      - parkun
-    image: skaborik/appeal_sender
-    restart: always
-    volumes:
-      - /tmp/temp_files_parkun:/tmp/temp_files_parkun
-      - ${HOME_FOLDER}/deploy/appeal_sender:/tmp/sender_config
-    depends_on:
-      - browser
-      - rabbit
-      - captcha_solver
