@@ -45,6 +45,8 @@ services:
       - ${HOME_FOLDER}/redis_data:/data
       - ${HOME_FOLDER}/deploy/redis/redis.conf:/usr/local/etc/redis/redis.conf
     restart: always
+    ports:
+      - 16379:6379
     networks:
       - parkun
 
