@@ -8,6 +8,7 @@ MAX_VIOLATION_PHOTOS = 10
 # appeal language
 BY = '_by'
 RU = '_ru'
+LANGUAGES = [BY, RU]
 
 # bot config
 PREVIOUS_ADDRESS_PREFIX = '/saved_'
@@ -87,6 +88,7 @@ ADDRESS_FAIL = 'no_address'
 # to post into channel bot needs to be admin there
 CHANNEL = '@channel_name'
 TRASH_CHANNEL = '@channel_name'
+RESPONSE_HASHTAG = '#ответГАИ'
 
 # email verifier url
 MAIL_VERIFIER_URL = 'http://localhost:18080/validate'  # response 111
