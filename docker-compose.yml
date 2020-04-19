@@ -35,6 +35,18 @@ services:
       - rabbit
       - captcha_solver
 
+  broadcaster:
+    container_name: broadcaster
+    networks:
+      - parkun
+    image: skaborik/broadcaster
+    restart: always
+    volumes:
+      - /tmp/temp_files_parkun:/tmp/temp_files_parkun
+      - ${HOME_FOLDER}/deploy/broadcaster:/tmp/broadcaster_config
+    depends_on:
+      - rabbit
+
   redis:
     container_name: parkun_redis
     image: redis:5.0.7-alpine

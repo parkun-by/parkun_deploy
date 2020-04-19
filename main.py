@@ -64,6 +64,7 @@ class ParkunDeploy:
     def upload_configs(self):
         self.upload_parkun_bot_config()
         self.upload_appeal_sender_config()
+        self.upload_broadcaster_config()
         self.upload_rabbit_config()
         self.upload_redis_config()
 
@@ -111,6 +112,17 @@ class ParkunDeploy:
         result = self.connection.put(
             file,
             remote=f'{HOME_FOLDER}/deploy/appeal_sender')
+
+        print(f'Uploaded {result.local} to {result.remote}')
+
+    def upload_broadcaster_config(self):
+        self.safe_run_command('mkdir -p deploy/broadcaster')
+        filename = 'config.py'
+        file = path.join(os.getcwd(), 'broadcaster', filename)
+
+        result = self.connection.put(
+            file,
+            remote=f'{HOME_FOLDER}/deploy/broadcaster')
 
         print(f'Uploaded {result.local} to {result.remote}')
 
