@@ -23,5 +23,6 @@ TEMP_FILES_PATH = '/tmp/temp_files_parkun'
 PERSONAL_FOLDER = 'broadcaster'
 
 # VK
+VK_APP_ID = 'vk_app_id'
 VK_GROUP_ID = 'vk_group_id'
 VK_API_TOKEN = 'vk_api_token'
