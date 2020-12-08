@@ -98,3 +98,21 @@ services:
     networks:
       - parkun
     restart: always
+
+
+  numberplate:
+    container_name: parkun_numberplate
+    image: skaborik/numberplate_by
+    networks:
+      - parkun
+    ports:
+      - 5001:80
+    volumes:
+      - /tmp/temp_files_parkun:/tmp/temp_files_parkun
+    restart: always
+    hostname: parkun_numberplate
+    environment:
+      - FLASK_APP=main.py
+      - FLASK_DEBUG=0
+      - 'RUN=flask run --host=0.0.0.0 --port=80'
+    command: flask run --host=0.0.0.0 --port=80
