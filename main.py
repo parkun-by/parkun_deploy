@@ -57,6 +57,7 @@ class ParkunDeploy:
 
     def deploy(self):
         self.create_deploy_folder()
+        self.create_logs_folder()
         self.upload_configs()
         self.upload_makefile()
         self.upload_docker_compose()
@@ -128,6 +129,9 @@ class ParkunDeploy:
 
     def create_deploy_folder(self):
         self.safe_run_command('mkdir -p deploy')
+
+    def create_logs_folder(self):
+        self.safe_run_command('mkdir -p logs')
 
     def start(self) -> None:
         self.stop_current()

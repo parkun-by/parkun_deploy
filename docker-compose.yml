@@ -15,6 +15,7 @@ services:
     image: skaborik/parkun_bot
     restart: always
     volumes:
+      - ${HOME_FOLDER}/logs:/usr/src/app/logs
       - /tmp/temp_files_parkun:/tmp/temp_files_parkun
       - ${HOME_FOLDER}/deploy/parkun_bot:/tmp/parkun_config
     depends_on:
@@ -28,6 +29,7 @@ services:
     image: skaborik/appeal_sender
     restart: always
     volumes:
+      - ${HOME_FOLDER}/logs:/usr/src/app/logs
       - /tmp/temp_files_parkun:/tmp/temp_files_parkun
       - ${HOME_FOLDER}/deploy/appeal_sender:/tmp/sender_config
     depends_on:
@@ -42,6 +44,7 @@ services:
     image: skaborik/broadcaster
     restart: always
     volumes:
+      - ${HOME_FOLDER}/logs:/usr/src/app/logs
       - /tmp/temp_files_parkun:/tmp/temp_files_parkun
       - ${HOME_FOLDER}/deploy/broadcaster:/tmp/broadcaster_config
     depends_on:
