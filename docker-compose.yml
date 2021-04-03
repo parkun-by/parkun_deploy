@@ -8,7 +8,7 @@ networks:
   parkun:
 
 services:
-  bot:
+  parkun_bot:
     container_name: parkun_bot
     networks:
       - parkun
@@ -22,7 +22,7 @@ services:
       - redis
       - rabbit
 
-  sender:
+  parkun_sender:
     container_name: parkun_sender
     networks:
       - parkun
@@ -37,8 +37,8 @@ services:
       - rabbit
       - captcha_solver
 
-  broadcaster:
-    container_name: broadcaster
+  parkun_broadcaster:
+    container_name: parkun_broadcaster
     networks:
       - parkun
     image: skaborik/broadcaster
@@ -50,7 +50,7 @@ services:
     depends_on:
       - rabbit
 
-  redis:
+  parkun_redis:
     container_name: parkun_redis
     image: redis:5.0.7-alpine
     command:
@@ -65,7 +65,7 @@ services:
     networks:
       - parkun
 
-  rabbit:
+  parkun_rabbit:
     container_name: parkun_rabbit
     networks:
       - parkun
@@ -79,7 +79,7 @@ services:
       - ${HOME_FOLDER}/rabbit_data:/var/lib/rabbitmq
     restart: always
 
-  browser:
+  parkun_browser:
     container_name: parkun_browser
     image: selenium/standalone-firefox:3.141.59
     networks:
@@ -88,7 +88,7 @@ services:
     volumes:
       - /dev/shm:/dev/shm
 
-  captcha_solver:
+  parkun_captcha_solver:
     container_name: parkun_captcha_solver
     image: skaborik/solver
     ports:
@@ -102,8 +102,7 @@ services:
       - parkun
     restart: always
 
-
-  numberplate:
+  parkun_numberplate:
     container_name: parkun_numberplate
     image: skaborik/numberplate_by
     networks:
