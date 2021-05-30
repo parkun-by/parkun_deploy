@@ -97,7 +97,7 @@ class ParkunDeploy:
 
     def upload_parkun_bot_config(self):
         self.safe_run_command('mkdir -p deploy/parkun_bot')
-        filename = 'config.py'
+        filename = '.env'
         file = path.join(os.getcwd(), 'parkun_bot', filename)
 
         result = self.connection.put(file,

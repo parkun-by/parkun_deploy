@@ -9,6 +9,8 @@ networks:
 
 services:
   parkun_bot:
+    env_file:
+      - parkun_bot/.env
     container_name: parkun_bot
     networks:
       - parkun
@@ -17,7 +19,6 @@ services:
     volumes:
       - ${HOME_FOLDER}/logs:/usr/src/app/logs
       - /tmp/temp_files_parkun:/tmp/temp_files_parkun
-      - ${HOME_FOLDER}/deploy/parkun_bot:/tmp/parkun_config
     depends_on:
       - redis
       - rabbit
