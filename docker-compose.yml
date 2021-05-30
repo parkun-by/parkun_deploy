@@ -20,8 +20,8 @@ services:
       - ${HOME_FOLDER}/logs:/usr/src/app/logs
       - /tmp/temp_files_parkun:/tmp/temp_files_parkun
     depends_on:
-      - redis
-      - rabbit
+      - parkun_redis
+      - parkun_rabbit
 
   parkun_sender:
     container_name: parkun_sender
@@ -34,9 +34,9 @@ services:
       - /tmp/temp_files_parkun:/tmp/temp_files_parkun
       - ${HOME_FOLDER}/deploy/appeal_sender:/tmp/sender_config
     depends_on:
-      - browser
-      - rabbit
-      - captcha_solver
+      - parkun_browser
+      - parkun_rabbit
+      - parkun_captcha_solver
 
   parkun_broadcaster:
     container_name: parkun_broadcaster
@@ -49,7 +49,7 @@ services:
       - /tmp/temp_files_parkun:/tmp/temp_files_parkun
       - ${HOME_FOLDER}/deploy/broadcaster:/tmp/broadcaster_config
     depends_on:
-      - rabbit
+      - parkun_rabbit
 
   parkun_redis:
     container_name: parkun_redis
