@@ -1,4 +1,4 @@
-version: '3.5'
+version: "3.5"
 
 volumes:
   wiremock-data:
@@ -96,7 +96,7 @@ services:
     environment:
       - FLASK_APP=main.py
       - FLASK_DEBUG=0
-      - 'RUN=flask run --host=0.0.0.0 --port=5000'
+      - "RUN=flask run --host=0.0.0.0 --port=5000"
     command: flask run --host=0.0.0.0 --port=5000
     networks:
       - parkun
@@ -116,5 +116,5 @@ services:
     environment:
       - FLASK_APP=main.py
       - FLASK_DEBUG=0
-      - 'RUN=flask run --host=0.0.0.0 --port=80'
+      - "RUN=flask run --host=0.0.0.0 --port=80"
     command: flask run --host=0.0.0.0 --port=80
