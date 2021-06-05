@@ -118,3 +118,20 @@ services:
       - FLASK_DEBUG=0
       - "RUN=flask run --host=0.0.0.0 --port=80"
     command: flask run --host=0.0.0.0 --port=80
+
+  parkun_email_verifier:
+    container_name: parkun_email_verifier
+    image: skaborik/email_verifier:1.0.0
+    networks:
+      - parkun
+    ports:
+      - 5002:80
+    restart: always
+    hostname: parkun_email_verifier
+    env_file:
+      - ./email_verifier/.env
+    environment:
+      - FLASK_APP=main.py
+      - FLASK_DEBUG=0
+      - "RUN=flask run --host=0.0.0.0 --port=80"
+    command: flask run --host=0.0.0.0 --port=80

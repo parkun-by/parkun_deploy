@@ -68,6 +68,7 @@ class ParkunDeploy:
         self.upload_broadcaster_config()
         self.upload_rabbit_config()
         self.upload_redis_config()
+        self.upload_email_verifier_config()
 
     def upload_redis_config(self):
         self.safe_run_command('mkdir -p deploy/redis')
@@ -102,6 +103,17 @@ class ParkunDeploy:
 
         result = self.connection.put(file,
                                      remote=f'{HOME_FOLDER}/deploy/parkun_bot')
+
+        print(f'Uploaded {result.local} to {result.remote}')
+
+    def upload_email_verifier_config(self):
+        self.safe_run_command('mkdir -p deploy/email_verifier')
+        filename = '.env'
+        file = path.join(os.getcwd(), 'email_verifier', filename)
+
+        result = self.connection.put(
+            file,
+            remote=f'{HOME_FOLDER}/deploy/email_verifier')
 
         print(f'Uploaded {result.local} to {result.remote}')
 
