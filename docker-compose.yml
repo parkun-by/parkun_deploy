@@ -28,10 +28,11 @@ services:
       - parkun
     image: skaborik/appeal_sender
     restart: always
+    env_file:
+      - ./appeal_sender/.env
     volumes:
       - ${HOME_FOLDER}/logs:/usr/src/app/logs
       - /tmp/temp_files_parkun:/tmp/temp_files_parkun
-      - ${HOME_FOLDER}/deploy/appeal_sender:/tmp/sender_config
     depends_on:
       - parkun_browser
       - parkun_rabbit

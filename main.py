@@ -119,7 +119,7 @@ class ParkunDeploy:
 
     def upload_appeal_sender_config(self):
         self.safe_run_command('mkdir -p deploy/appeal_sender')
-        filename = 'config.py'
+        filename = '.env'
         file = path.join(os.getcwd(), 'appeal_sender', filename)
 
         result = self.connection.put(
