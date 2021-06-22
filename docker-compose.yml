@@ -81,7 +81,7 @@ services:
 
   parkun_browser:
     container_name: parkun_browser
-    image: selenium/standalone-firefox:3.141.59
+    image: selenium/standalone-firefox:89.0
     networks:
       - parkun
     restart: always
